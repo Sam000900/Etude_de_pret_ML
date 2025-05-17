@@ -12,9 +12,9 @@ app = Flask(__name__)
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
-model = joblib.load("./Models/model.pkl")
-scaler = joblib.load("./Models/scaler.pkl")
-features = joblib.load("./Models/features.pkl")
+model = joblib.load("../Models/model.pkl")
+scaler = joblib.load("../Models/scaler.pkl")
+features = joblib.load("../Models/features.pkl")
 
 @app.route('/predict', methods=['POST'])
 
