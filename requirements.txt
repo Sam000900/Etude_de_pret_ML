@@ -1,0 +1,30 @@
+# Machine Learning
+pandas
+numpy
+joblib
+xgboost
+seaborn
+scikit-learn
+imbalanced-learn
+
+# API
+flask
+python-dotenv
+
+# Dashboard
+requests
+waitress
+streamlit
+# Interprétabilité (optionnel)
+shap
+matplotlib
+
+
+
+
+
+
+
+
+
+
