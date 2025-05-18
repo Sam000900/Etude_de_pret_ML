@@ -52,7 +52,7 @@ st.write(client_display)
 if st.button("Évaluer l’éligibilité"):
 
     payload = client_data.iloc[0].to_dict()
-    response = requests.post("http://localhost:10000/predict", json=payload, headers=headers)
+    response = requests.post("https://etude-de-pret-ml.onrender.com/predict", json=payload, headers=headers)
     
     if response.status_code == 200:
 
