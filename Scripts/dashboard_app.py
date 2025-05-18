@@ -37,9 +37,10 @@ client_data = (
 
     data[data["SK_ID_CURR"] == client_id]
     .drop(columns=["TARGET", "SK_ID_CURR"])
+    #.drop(columns=["TARGET", "SK_ID_CURR"])
 
     .fillna(-999)
-    .infer_objects(copy=False) )
+    .infer_objects(copy=False))
 
 st.subheader("Informations Client")
 
