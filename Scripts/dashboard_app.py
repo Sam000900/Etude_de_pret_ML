@@ -1,3 +1,4 @@
+import io
 import os
 import joblib
 import requests
@@ -14,7 +15,13 @@ headers = {"ML-api-key": "super-secret-API-key"}
 file_id = "192aA6koh_zobb6EjsbAcUERUsDZN-Prw"
 url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
-data = pd.read_csv(url)
+response = requests.get(url)
+
+if response.status_code == 200:
+    data = pd.read_csv(io.StringIO(response.text))
+    
+else:
+    st.error("Failed to download data file.")
 
 features = joblib.load("../Models/features.pkl")
 
