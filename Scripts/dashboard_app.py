@@ -22,7 +22,7 @@ if response.status_code == 200:
 else:
     st.error("Failed to download data file.")
 
-features = joblib.load("../Models/features.pkl")
+features = joblib.load("./Models/features.pkl")
 
 # Sélection d'un ID client (et remplacement des ID vides)
 client_id = st.selectbox("Sélectionnez un client :", data["SK_ID_CURR"].unique())
