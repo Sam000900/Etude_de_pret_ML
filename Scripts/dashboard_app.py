@@ -12,7 +12,8 @@ headers = {"ML-api-key": "super-secret-API-key"}
 # data = pd.read_csv("../Data/application_test.csv") # si ca ne fonctionne pas : mettre ./Data/application_train.csv
 
 # Dans notre cas les données sont sur google drive :
-url = f"https://drive.google.com/file/d/192aA6koh_zobb6EjsbAcUERUsDZN-Prw/view?usp=sharing"
+file_id = "192aA6koh_zobb6EjsbAcUERUsDZN-Prw"
+url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
 response = requests.get(url)
 
@@ -21,6 +22,7 @@ if response.status_code == 200:
     
 else:
     st.error("Failed to download data file.")
+    st.stop()
 
 features = joblib.load("./Models/features.pkl")
 
