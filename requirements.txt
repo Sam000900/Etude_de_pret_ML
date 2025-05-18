@@ -12,9 +12,11 @@ flask
 python-dotenv
 
 # Dashboard
+gdown
 requests
 waitress
 streamlit
+
 # Interprétabilité (optionnel)
 shap
 matplotlib
