@@ -36,7 +36,7 @@ client_id = st.selectbox("Sélectionnez un client :", data["SK_ID_CURR"].unique(
 client_data = (
 
     data[data["SK_ID_CURR"] == client_id]
-    .drop(columns=["TARGET", "SK_ID_CURR"])
+    .drop(columns=["SK_ID_CURR"])
     #.drop(columns=["TARGET", "SK_ID_CURR"])
 
     .fillna(-999)
