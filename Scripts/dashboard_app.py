@@ -1,5 +1,6 @@
 import io
 import os
+import gdown
 import joblib
 import requests
 import pandas as pd
@@ -13,15 +14,19 @@ headers = {"ML-api-key": "super-secret-API-key"}
 
 # Dans notre cas les données sont sur google drive :
 file_id = "192aA6koh_zobb6EjsbAcUERUsDZN-Prw"
-url = f"https://drive.google.com/uc?export=download&id={file_id}"
+url = f"https://drive.google.com/uc?id={file_id}"
+output = "data.csv"
 
-response = requests.get(url)
-
-if response.status_code == 200:
-    data = pd.read_csv(io.StringIO(response.text))
+# Telechargement
+if not os.path.exists(output):
+    gdown.download(url, output, quiet=False)
     
-else:
-    st.error("Failed to download data file.")
+# Chargement
+try:
+    data = pd.read_csv(output)
+    
+except Exception as e:
+    st.error(f"Erreur de chargement du fichier: {e}")
     st.stop()
 
 features = joblib.load("./Models/features.pkl")
