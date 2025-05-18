@@ -7,8 +7,15 @@ import streamlit as st
 st.title("Dashboard d'éligibilité au prêt - Néo Banque")
 headers = {"ML-api-key": "super-secret-API-key"}
 
-# Chargement des données 
-data = pd.read_csv("../Data/application_test.csv") # si ca ne fonctionne pas : mettre ./Data/application_train.csv
+# Chargement des données (en tant normal si elle se trouve sur github
+# data = pd.read_csv("../Data/application_test.csv") # si ca ne fonctionne pas : mettre ./Data/application_train.csv
+
+# Dans notre cas les données sont sur google drive :
+file_id = "192aA6koh_zobb6EjsbAcUERUsDZN-Prw"
+url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+data = pd.read_csv(url)
+
 features = joblib.load("../Models/features.pkl")
 
 # Sélection d'un ID client (et remplacement des ID vides)
