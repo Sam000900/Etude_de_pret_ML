@@ -13,7 +13,7 @@ headers = {"ML-api-key": "super-secret-API-key"}
 # data = pd.read_csv("../Data/application_test.csv") # si ca ne fonctionne pas : mettre ./Data/application_train.csv
 
 # Dans notre cas les données sont sur google drive :
-file_id = "192aA6koh_zobb6EjsbAcUERUsDZN-Prw"
+file_id = "1Gi6chtMWmaHu80R5gu83_MUKeDp2BUek"
 url = f"https://drive.google.com/uc?id={file_id}"
 output = "data.csv"
 
