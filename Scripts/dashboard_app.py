@@ -32,80 +32,72 @@ except Exception as e:
 features = joblib.load("./Models/features.pkl")
 
 
-# Filtres de recherche (avant le selectbox des clients)
+# teste  
+# 2) Bandeau Latéral Gauche : Filtres + Sélecteur
+# -------------------------------------------------------------
+with st.sidebar:
+    st.header("Filtres de recherche")
 
+    # ----- Âge --------------------------------------------------
+    if "AGE" not in data.columns:
+        data["AGE"] = (-data["DAYS_BIRTH"] // 365).astype(int)
 
-st.subheader("Filtres de recherche")
+    age_min, age_max = int(data["AGE"].min()), int(data["AGE"].max())
+    age_range = st.slider(
+        "Âge",
+        min_value=age_min, max_value=age_max,
+        value=(age_min, age_max), step=1,
+        key="age_slider"
+    )
 
-# (si tu n’as que DAYS_BIRTH en jours négatifs → calcule AGE en années)
-if "AGE" not in data.columns:
-    data["AGE"] = (-data["DAYS_BIRTH"] // 365).astype(int)
+    # ----- Revenu total ---------------------------------------
+    income_min, income_max = map(int, (data["AMT_INCOME_TOTAL"].min(),
+                                       data["AMT_INCOME_TOTAL"].max()))
+    income_range = st.slider(
+        "Revenu total",
+        min_value=income_min, max_value=income_max,
+        value=(income_min, income_max), step=1000,
+        format="%d",
+        key="income_slider"
+    )
 
-age_min, age_max = int(data["AGE"].min()), int(data["AGE"].max())
+    # ----- Sexe ------------------------------------------------
+    sex_selected = st.multiselect(
+        "Sexe",
+        options=["M", "F"],
+        default=["M", "F"],
+        key="sex_multiselect"
+    )
 
-age_range = st.slider(
-    "Âge",
-    min_value=age_min,
-    max_value=age_max,
-    value=(age_min, age_max),
-    step=1,
-)
+    # ----- Type de revenu --------------------------------------
+    income_type_options = sorted(data["NAME_INCOME_TYPE"].unique())
+    income_type_selected = st.multiselect(
+        "Type de revenu",
+        options=income_type_options,
+        default=income_type_options,
+        key="income_type_multiselect"
+    )
 
+    st.divider()  # petite ligne de séparation
 
-income_min, income_max = int(data["AMT_INCOME_TOTAL"].min()), int(data["AMT_INCOME_TOTAL"].max())
+    # ----- Filtrage du dataframe ------------------------------
+    filtered_data = data[
+        (data["AGE"].between(*age_range)) &
+        (data["AMT_INCOME_TOTAL"].between(*income_range)) &
+        (data["CODE_GENDER"].isin(sex_selected)) &
+        (data["NAME_INCOME_TYPE"].isin(income_type_selected))
+    ]
 
-income_range = st.slider(
-    "Revenu total",
-    min_value=income_min,
-    max_value=income_max,
-    value=(income_min, income_max),
-    step=1000,
-    format="%d",
-)
+    st.caption(f"{len(filtered_data)} client(s) correspondant(s) aux filtres")
 
+    # ----- Sélecteur d'ID client ------------------------------
+    client_id = st.selectbox(
+        "Sélectionnez un client :",
+        filtered_data["SK_ID_CURR"].unique(),
+        key="client_select"
+    )
 
-sex_selected = st.multiselect(
-    "Sexe",
-    options=["M", "F"],
-    default=["M", "F"],  # par défaut on sélectionne tout
-)
-
-
-# (Home Credit: NAME_INCOME_TYPE)
-income_type_options = sorted(data["NAME_INCOME_TYPE"].unique())
-income_type_selected = st.multiselect(
-    "Type de revenu",
-    options=income_type_options,
-    default=income_type_options,
-)
-
-
-# Filtrage du dataframe
-
-filtered_data = data[
-    (data["AGE"].between(*age_range))
-    & (data["AMT_INCOME_TOTAL"].between(*income_range))
-    & (data["CODE_GENDER"].isin(sex_selected))
-    & (data["NAME_INCOME_TYPE"].isin(income_type_selected))
-]
-
-# (optionnel) Afficher le nombre de clients restant
-st.caption(f"{len(filtered_data)} client(s) correspondant(s) aux filtres.")
-
-
-# Sélecteur d'ID client – on ne propose que ceux qui sont filtrés
-
-client_id = st.selectbox(
-    "Sélectionnez un client :",
-    filtered_data["SK_ID_CURR"].unique(),
-)
-
-client_data = (
-    filtered_data[filtered_data["SK_ID_CURR"] == client_id]
-    .drop(columns=["SK_ID_CURR"])
-    .fillna(-999)
-    .infer_objects(copy=False)
-)
+# teste  
 
 
 # Sélection d'un ID client (et remplacement des ID vides)
