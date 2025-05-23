@@ -31,14 +31,11 @@ except Exception as e:
 
 features = joblib.load("./Models/features.pkl")
 
-
-# teste  
-# 2) Bandeau Latéral Gauche : Filtres + Sélecteur
-# -------------------------------------------------------------
+# Bandeau Latéral Gauche : Filtres 
 with st.sidebar:
     st.header("Filtres de recherche")
 
-    # ----- Âge --------------------------------------------------
+    # Âge 
     if "AGE" not in data.columns:
         data["AGE"] = (-data["DAYS_BIRTH"] // 365).astype(int)
 
@@ -50,7 +47,7 @@ with st.sidebar:
         key="age_slider"
     )
 
-    # ----- Revenu total ---------------------------------------
+    # Revenu total 
     income_min, income_max = map(int, (data["AMT_INCOME_TOTAL"].min(),
                                        data["AMT_INCOME_TOTAL"].max()))
     income_range = st.slider(
@@ -61,7 +58,7 @@ with st.sidebar:
         key="income_slider"
     )
 
-    # ----- Sexe ------------------------------------------------
+    # Sexe 
     sex_selected = st.multiselect(
         "Sexe",
         options=["M", "F"],
@@ -69,7 +66,7 @@ with st.sidebar:
         key="sex_multiselect"
     )
 
-    # ----- Type de revenu --------------------------------------
+    # Type de revenu 
     income_type_options = sorted(data["NAME_INCOME_TYPE"].unique())
     income_type_selected = st.multiselect(
         "Type de revenu",
@@ -80,7 +77,7 @@ with st.sidebar:
 
     st.divider()  # petite ligne de séparation
 
-    # ----- Filtrage du dataframe ------------------------------
+    # Filtrage du dataframe 
     filtered_data = data[
         (data["AGE"].between(*age_range)) &
         (data["AMT_INCOME_TOTAL"].between(*income_range)) &
@@ -90,14 +87,13 @@ with st.sidebar:
 
     st.caption(f"{len(filtered_data)} client(s) correspondant(s) aux filtres")
 
-    # ----- Sélecteur d'ID client ------------------------------
+    # Sélecteur d'ID client 
     client_id = st.selectbox(
         "Sélectionnez un client :",
         filtered_data["SK_ID_CURR"].unique(),
         key="client_select"
     )
 
-# teste  
 
 
 # Sélection d'un ID client (et remplacement des ID vides)
