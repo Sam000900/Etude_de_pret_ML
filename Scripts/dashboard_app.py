@@ -49,8 +49,9 @@ st.write(client_display)
 
 # Appel à l'api de prédiction
 
+st.markdown(
+    """
 ### Interprétation du Score d’éligibilité
-
 Le score d’éligibilité au prêt est calculé en fonction de multiples facteurs financiers et personnels du client.
 
 - Score inférieur à 0.3 : Le client est considéré comme à risque.  
