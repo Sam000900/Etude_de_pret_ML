@@ -9,6 +9,10 @@ import streamlit as st
 st.title("Dashboard d'éligibilité au prêt - Néo Banque")
 headers = {"ML-api-key": "super-secret-API-key"}
 
+@st.cache_data
+def load_data(path):
+    return pd.read_csv(path)
+
 # Chargement des données (en tant normal si elle se trouve sur github
 # data = pd.read_csv("../Data/application_test.csv") # si ca ne fonctionne pas : mettre ./Data/application_train.csv
 
