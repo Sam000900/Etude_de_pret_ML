@@ -9,29 +9,51 @@ import streamlit as st
 st.title("Dashboard d'éligibilité au prêt - Néo Banque")
 headers = {"ML-api-key": "super-secret-API-key"}
 
-@st.cache_data
-def load_data(path):
-    return pd.read_csv(path)
+
 
 # Chargement des données (en tant normal si elle se trouve sur github
 # data = pd.read_csv("../Data/application_test.csv") # si ca ne fonctionne pas : mettre ./Data/application_train.csv
 
-# Dans notre cas les données sont sur google drive :
-file_id = "1Gi6chtMWmaHu80R5gu83_MUKeDp2BUek"
-url = f"https://drive.google.com/uc?id={file_id}"
-output = "data.csv"
 
-# Telechargement
+
+# test 
+@st.cache_data
+def load_data(path: str) -> pd.DataFrame:
+    """Charge le CSV et met en cache tant que le fichier n'a pas changé."""
+    return pd.read_csv(path)
+
+# ── 2️⃣ Téléchargement du fichier depuis Google Drive ────────────
+file_id = "1Gi6chtMWmaHu80R5gu83_MUKeDp2BUek"
+output  = "data.csv"
+
 if not os.path.exists(output):
-    gdown.download(url, output, quiet=False)
-    
-# Chargement
+    try:
+        gdown.download(
+            id=file_id,         # on passe l'ID plutôt que l'URL complète
+            output=output,
+            quiet=False,
+            fuzzy=True,
+            use_cookies=False
+        )
+    except gdown.exceptions.FileURLRetrievalError as e:
+        st.error(
+            "Impossible de récupérer le fichier sur Google Drive.\n"
+            "• Vérifiez les droits de partage\n"
+            "• Attendez un peu si le quota est dépassé\n"
+            "• Ou hébergez le CSV ailleurs."
+        )
+        st.stop()
+
+# ── 3️⃣ Chargement en cache ──────────────────────────────────────
 try:
-    data = pd.read_csv(output)
-    
+    data = load_data(output)
 except Exception as e:
-    st.error(f"Erreur de chargement du fichier: {e}")
+    st.error(f"Erreur de chargement du fichier : {e}")
     st.stop()
+
+
+
+
 
 features = joblib.load("./Models/features.pkl")
 
